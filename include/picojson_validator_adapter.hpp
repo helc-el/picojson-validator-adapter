@@ -505,7 +505,7 @@ namespace adapter {
         if (value == true_value_) {
           return std::string{};
         } else {
-          return std::format("` is invalid value. The value should be `{}`.",
+          return std::format("` is invalid value. The value must be `{}`.",
                              value.serialize());
         }
       };
@@ -597,7 +597,7 @@ namespace adapter {
           return std::string{};
         } else {
           return std::format(
-              "` is invalid Boolean value. The value should be `{}`.",
+              "` is invalid Boolean value. The value must be `{}`.",
               true_value);
         }
       };
@@ -636,8 +636,7 @@ namespace adapter {
           return std::string{};
         } else {
           return std::format(
-              "` is invalid Number value. The value should be `{}`.",
-              true_value);
+              "` is invalid Number value. The value must be `{}`.", true_value);
         }
       };
       return ValueValidator<decltype(type_lambda), decltype(value_lambda)>{
@@ -724,8 +723,7 @@ namespace adapter {
           return std::string{};
         } else {
           return std::format(
-              "` is invalid Int64 value. The value should be `{}`.",
-              true_value);
+              "` is invalid Int64 value. The value must be `{}`.", true_value);
         }
       };
       return ValueValidator<decltype(type_lambda), decltype(value_lambda)>{
@@ -813,8 +811,7 @@ namespace adapter {
           return std::string{};
         } else {
           return std::format(
-              "` is invalid String value. The value should be `{}`.",
-              true_value);
+              "` is invalid String value. The value must be `{}`.", true_value);
         }
       };
       return ValueValidator<decltype(type_lambda), decltype(value_lambda)>{
@@ -902,7 +899,7 @@ namespace adapter {
           return std::string{};
         } else {
           return std::format(
-              "` is invalid Array value. The value should be `{}`.",
+              "` is invalid Array value. The value must be `{}`.",
               picojson::value(std::move(true_value_)).serialize());
         }
       };
@@ -996,7 +993,7 @@ namespace adapter {
           return std::string{};
         } else {
           return std::format(
-              "` is invalid Object value. The value should be `{}`.",
+              "` is invalid Object value. The value must be `{}`.",
               picojson::value(true_value_).serialize());
         }
       };

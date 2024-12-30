@@ -14,6 +14,7 @@ using namespace picojson::validator::adapter;  // NOLINT
 using picojson::validator::ValidatorContainer;
 
 template <typename T>
+  requires (!std::convertible_to<T, std::string>)
 void validator_test (T data, const ValidatorContainer& validator) {
   // Create JSON data
   picojson::value json_value(data);
@@ -28,7 +29,8 @@ void validator_test (T data, const ValidatorContainer& validator) {
   }
 }
 
-template <std::convertible_to<std::string> T>
+template <typename T>
+  requires std::convertible_to<T, std::string>
 void validator_test (const T& json_string,
                      const ValidatorContainer& validator) {
   // Parse JSON data
@@ -48,38 +50,6 @@ void validator_test (const T& json_string,
     std::cout << "Validation failed: " << result << std::endl;
   }
 }
-
-// void validator_test_s (const std::string& json,
-//                        const ValidatorContainer& validator) {
-//   // Parse JSON data
-//   picojson::value json_value;
-//   std::string err = picojson::parse(json_value, json);
-//   if (!err.empty()) {
-//     std::cerr << "JSON parse error: " << err << std::endl;
-//     std::exit(1);
-//   }
-
-//   // Validate JSON value
-//   std::string result = validator.validate(json_value, "json_value");
-
-//   if (result.empty()) {
-//     std::cout << "Validation successful." << std::endl;
-//   } else {
-//     std::cout << "Validation failed: " << result << std::endl;
-//   }
-// }
-
-// void validator_test_v (const picojson::value& json_value,
-//                        const ValidatorContainer& validator) {
-//   // Validate JSON value
-//   std::string result = validator.validate(json_value, "json_value");
-
-//   if (result.empty()) {
-//     std::cout << "Validation successful." << std::endl;
-//   } else {
-//     std::cout << "Validation failed: " << result << std::endl;
-//   }
-// }
 
 int main () {
   // Target JSON data
@@ -171,7 +141,7 @@ int main () {
     //     (const double true_value) const
     auto validator = number(1.4);
     validator_test(1.4, validator);
-    validator_test(0, validator);
+    validator_test(0.0, validator);
   }
   {
     // constexpr auto NumberValidatorFn::operator()
@@ -203,14 +173,14 @@ int main () {
     //     (const int64_t true_value) const
     auto validator = int64(100);
     validator_test(100ll, validator);
-    validator_test(200, validator);
+    validator_test(200ll, validator);
   }
   {
     // constexpr auto Int64ValidatorFn::operator()
     //     (Pred&& value_predicator) const
     auto validator = int64([] (const std::int64_t x) { return x > 0; });
     validator_test(12ll, validator);
-    validator_test(0, validator);
+    validator_test(0ll, validator);
   }
   {
     // constexpr auto Int64ValidatorFn::operator()
@@ -219,7 +189,7 @@ int main () {
       return x % 2 == 0 ? "" : "The value must be even.";
     });
     validator_test(48ll, validator);
-    validator_test(36, validator);
+    validator_test(35ll, validator);
   }
 
   std::cout << "\n<String>\n";
